@@ -22,6 +22,9 @@ class User_Base(Base):
     def keys(self):
         return [c.name for c in self.__table__.columns]
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 #user_form_model
 class User_From(Base):
@@ -59,6 +62,9 @@ class User_From(Base):
     def keys(self):
         return [c.name for c in self.__table__.columns]
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Spouse(Base):
     __tablename__ = 'spouse'
@@ -76,6 +82,9 @@ class Spouse(Base):
     def keys(self):
         return [c.name for c in self.__table__.columns]
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Children(Base):
     __tablename__ = 'children'
@@ -89,6 +98,9 @@ class Children(Base):
     def keys(self):
         return [c.name for c in self.__table__.columns]
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Phone_Name(Base):
     __tablename__ = 'phone_name'
@@ -101,3 +113,6 @@ class Phone_Name(Base):
 
     def keys(self):
         return [c.name for c in self.__table__.columns]
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
