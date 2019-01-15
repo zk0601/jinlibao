@@ -11,6 +11,7 @@ import urls
 import config.setting
 from api.error import NotFoundHandler
 from utils.log_helper import logger, request_log
+from sessions import SessionManager
 
 
 class Application(tornado.web.Application):
@@ -32,6 +33,7 @@ class Application(tornado.web.Application):
         # self.Need_Token_URLs = urls.Need_Token_URLs
         self.logger = logger(self.baseDir + '/logs/application.log', logging.INFO)
         self.requestlogger = request_log(self.baseDir + '/logs/requests.log', logging.INFO)
+        self.sessionmanager = SessionManager(options.redis_host, options.redis_port, options.redis_password)
 
 
 def main():
@@ -40,6 +42,7 @@ def main():
     http_server = tornado.httpserver.HTTPServer(app, xheaders=True)
     http_server.listen(options.port)
     loop = tornado.ioloop.IOLoop.instance()
+    print("Application starts on port: ", options.port)
     loop.start()
 
 

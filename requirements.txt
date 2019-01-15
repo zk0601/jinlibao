@@ -2,3 +2,4 @@ tornado == 4.5.3
 SQLAlchemy == 1.2.13
 requests == 2.20.0
 PyJWT == 1.6.4
+redis == 3.0.1

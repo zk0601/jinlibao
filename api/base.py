@@ -16,6 +16,8 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.set_status(200)
         self.set_header("Content-Type", 'application/json')
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header('Access-Control-Allow-Methods', "POST, GET")
 
     @property
     def session(self):
@@ -32,6 +34,10 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def logger(self):
         return self.application.logger
+
+    @property
+    def sessionmanager(self):
+        return self.application.sessionmanager
 
     def on_finish(self):
         self.session.remove()
@@ -71,21 +77,31 @@ class BaseHandler(tornado.web.RequestHandler):
         result = {"state": code, "msg": msg, "data": data}
         return self.write(json_encode(result))
 
-    # @run_on_executor
-    # def prepare(self):
-    #     if self.request.method == 'OPTIONS':
-    #         return
-    #
-    #     self.request_log()
-    #
-    #     urlobj = urlparse(self.request.uri)
-    #     request_path = urlobj.path
-    #
-    #     # token = self.request.headers.get("Authentication")
-    #     token = self.get_argument("token", None)
-    #     # 登录权限
-    #     if request_path in self.application.Need_Token_URLs and not self.userAuthCheck(token):
-    #         return self.redirect("/v1/user/auth")
+    @run_on_executor
+    def prepare(self):
+
+        self.request_log()
+
+        urlobj = urlparse(self.request.uri)
+        request_path = urlobj.path
+
+        if request_path in ["/admin/login", "/admin/auth"]:
+            return
+
+        cookie = self.request.headers.get("cookie")
+        if not cookie:
+            return self.redirect("/admin/auth")
+        r = self.sessionmanager.get(cookie)
+        if not r:
+            return self.redirect("/admin/auth")
+        else:
+            self.sessionmanager.settime(cookie, 7200)
+
+        # token = self.request.headers.get("Authentication")
+        # token = self.get_argument("token", None)
+        # 登录权限
+        # if request_path in self.application.Need_Token_URLs and not self.userAuthCheck(token):
+        #     return self.redirect("/v1/user/auth")
 
     def request_log(self):
         # 输出请求日志
