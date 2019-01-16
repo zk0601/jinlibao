@@ -2,6 +2,7 @@ from tornado.concurrent import run_on_executor
 from .base import BaseHandler
 import datetime
 import traceback
+import json
 
 from models.admin import Admin
 
@@ -10,8 +11,13 @@ class LoginHandler(BaseHandler):
     @run_on_executor
     def post(self):
         try:
-            user = self.get_argument('user', None)
-            password = self.get_argument('password', None)
+            # user = self.get_argument('user', None)
+            # password = self.get_argument('password', None)
+            json_data = self.request.body
+            json_args = json.loads(json_data)
+            user = json_args.get('user', None)
+            password = json_args.get('password', None)
+
             if not user or not password:
                 return self.response(code=10010, msg='登陆失败')
 

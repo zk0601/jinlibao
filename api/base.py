@@ -3,6 +3,7 @@ import time
 import tornado.web
 import datetime
 import config.setting
+import json
 from urllib.parse import urlparse
 from tornado.options import options
 from tornado.escape import json_encode
@@ -110,9 +111,12 @@ class BaseHandler(tornado.web.RequestHandler):
         urlobj = urlparse(self.request.uri)
         request_path = urlobj.path
 
-        for key, vals in sorted(self.request.arguments.items()):
-            if key == 'sign': continue
-            paramStr += "%s=%s&" % (key, vals[0].decode())
+        json_data = self.request.body
+        json_args = json.loads(json_data)
+        for key, val in sorted(json_args.items()):
+            if key == 'sign':
+                continue
+            paramStr += "%s=%s&" % (key, val)
 
         version = self.request.headers.get("Version", None)
         device_type = self.request.headers.get("x-dvtype", None)

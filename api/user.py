@@ -12,10 +12,17 @@ class UserListHandler(BaseHandler):
     @run_on_executor
     def post(self):
         try:
-            page = int(self.get_argument('page', 1))
-            limit = int(self.get_argument('limit', 10))
-            is_member = self.get_argument('is_member', None)
-            has_deatil = self.get_argument('has_detail', None)
+            # page = int(self.get_argument('page', 1))
+            # limit = int(self.get_argument('limit', 10))
+            # is_member = self.get_argument('is_member', None)
+            # has_detail = self.get_argument('has_detail', None)
+
+            json_data = self.request.body
+            json_args = json.loads(json_data)
+            page = int(json_args.get('page', 1))
+            limit = int(json_args.get('limit', 10))
+            is_member = json_args.get('is_member', None)
+            has_detail = json_args.get('is_detail', None)
 
             time_format = "%Y-%m-%d %H:%M:%S"
             offset = limit * (page - 1)
@@ -47,7 +54,7 @@ class UserListHandler(BaseHandler):
                 if is_member and is_member == 1:
                     if user['is_member'] == 0:
                         continue
-                if has_deatil and has_deatil == 1:
+                if has_detail and has_detail == 1:
                     if user['has_detail'] == 0:
                         continue
                 data.append(user)
@@ -66,7 +73,10 @@ class UserDeatilHandler(BaseHandler):
     @run_on_executor
     def post(self):
         try:
-            openid = self.get_argument('openid', None)
+            # openid = self.get_argument('openid', None)
+            json_data = self.request.body
+            json_args = json.loads(json_data)
+            openid = json_args.get('openid', None)
             if not openid:
                 return self.response(code=10002, msg='缺少openid')
 
