@@ -102,7 +102,7 @@ class UserDeatilHandler(BaseHandler):
             data['income'] = detail.income
             data['profession'] = detail.profession
             data['has_socialsecurity'] = detail.has_socialsecurity
-            data['has_houseloans'] = detail.has_houseloans
+            data['has_houseloans'] = detail.has_housloans
             if detail.has_houseloans == 1:
                 data['houseloans_total'] = detail.houseloans_total
                 data['houseloans_permonth'] = detail.houseloans_permonth
