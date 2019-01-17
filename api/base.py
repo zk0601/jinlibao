@@ -89,7 +89,8 @@ class BaseHandler(tornado.web.RequestHandler):
         if request_path in ["/admin/login", "/admin/auth"]:
             return
 
-        cookie = self.request.headers.get("cookie")
+        # cookie = self.request.headers.get("cookie")
+        cookie = self.get_cookie('JNB_cookie')
         if not cookie:
             return self.redirect("/admin/auth")
         r = self.sessionmanager.get(cookie)
@@ -112,7 +113,10 @@ class BaseHandler(tornado.web.RequestHandler):
         request_path = urlobj.path
 
         json_data = self.request.body
-        json_args = json.loads(json_data)
+        if not json_data:
+            json_args = {}
+        else:
+            json_args = json.loads(json_data)
         for key, val in sorted(json_args.items()):
             if key == 'sign':
                 continue

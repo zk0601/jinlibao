@@ -14,7 +14,10 @@ class LoginHandler(BaseHandler):
             # user = self.get_argument('user', None)
             # password = self.get_argument('password', None)
             json_data = self.request.body
-            json_args = json.loads(json_data)
+            if not json_data:
+                json_args = {}
+            else:
+                json_args = json.loads(json_data)
             user = json_args.get('user', None)
             password = json_args.get('password', None)
 
@@ -27,7 +30,8 @@ class LoginHandler(BaseHandler):
             else:
                 uid = admin.id
                 cookie = self.sessionmanager.set(uid, 7200)
-                return self.response(code=10000, msg='登陆成功', data={'cookie': cookie})
+                self.set_cookie('JNB_cookie', cookie)
+                return self.response(code=10000, msg='登陆成功')
 
         except Exception as e:
             self.logger.error(str(e.__traceback__.tb_lineno) + str(e))
@@ -43,6 +47,7 @@ class LogoutHandler(BaseHandler):
         try:
             cookie = self.request.headers.get("cookie")
             self.sessionmanager.delete(cookie)
+            self.clear_cookie("JNB_cookie")
             return self.response(code=10000, msg='登出成功')
         except Exception as e:
             self.logger.error(str(e.__traceback__.tb_lineno) + str(e))

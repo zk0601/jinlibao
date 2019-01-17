@@ -18,7 +18,10 @@ class UserListHandler(BaseHandler):
             # has_detail = self.get_argument('has_detail', None)
 
             json_data = self.request.body
-            json_args = json.loads(json_data)
+            if not json_data:
+                json_args = {}
+            else:
+                json_args = json.loads(json_data)
             page = int(json_args.get('page', 1))
             limit = int(json_args.get('limit', 10))
             is_member = json_args.get('is_member', None)
@@ -75,7 +78,10 @@ class UserDeatilHandler(BaseHandler):
         try:
             # openid = self.get_argument('openid', None)
             json_data = self.request.body
-            json_args = json.loads(json_data)
+            if not json_data:
+                json_args = {}
+            else:
+                json_args = json.loads(json_data)
             openid = json_args.get('openid', None)
             if not openid:
                 return self.response(code=10002, msg='缺少openid')
