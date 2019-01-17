@@ -92,12 +92,12 @@ class BaseHandler(tornado.web.RequestHandler):
         # cookie = self.request.headers.get("cookie")
         cookie = self.get_cookie('JNB_cookie')
         if not cookie:
-            # return self.redirect("/admin/auth")
-            return self.response(code=10010, msg='非登录用户无权限')
+            return self.redirect("/%s/admin/auth" % options.nginx_path)
+            # return self.response(code=10010, msg='非登录用户无权限')
         r = self.sessionmanager.get(cookie)
         if not r:
-            # return self.redirect("/admin/auth")
-            return self.response(code=10010, msg='非登录用户无权限')
+            return self.redirect("/%s/admin/auth" % options.nginx_path)
+            # return self.response(code=10010, msg='非登录用户无权限')
         else:
             self.sessionmanager.settime(cookie, 7200)
 

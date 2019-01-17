@@ -22,3 +22,6 @@ define("redis_password", default="123456", help="redis password")
 
 #session
 define("session_key", default="JinLiBao123321~#", help="session key")
+
+#nginx_path
+define("nginx_path", default="jinlibao", help="second-level domain")
