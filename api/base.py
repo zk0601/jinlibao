@@ -17,8 +17,10 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.set_status(200)
         self.set_header("Content-Type", 'application/json')
-        self.set_header("Access-Control-Allow-Origin", "*")
+        origin = self.request.headers.get("Origin")
+        self.set_header("Access-Control-Allow-Origin", origin)
         self.set_header('Access-Control-Allow-Methods', "POST, GET")
+        self.set_header("Access-Control-Allow-Credentials", "true")
 
     @property
     def session(self):
