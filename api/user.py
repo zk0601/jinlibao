@@ -31,7 +31,7 @@ class UserListHandler(BaseHandler):
             offset = limit * (page - 1)
 
             data = []
-            users = self.session.query(User_Base).order_by(User_Base.create_time.asc()).limit(limit).offset(offset)
+            users = self.session.query(User_Base).order_by(User_Base.create_time.desc()).limit(limit).offset(offset)
             for item in users:
                 user = item.as_dict()
                 user['create_time'] = item.create_time.strftime(time_format)
